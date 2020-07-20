@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,33 +15,30 @@ import com.jes.crud.model.Persona;
 import com.jes.crud.service.PersonaService;
 
 @RestController
-@RequestMapping(value = "/api/")
+@RequestMapping(value = "/api") // Ruta inicial por defecto
 public class PersonaRestController {
 
 	@Autowired
 	PersonaService personaService;
-
-	// http://localhost:8888/ (GET)
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	
+	// *** LISTAR (READ) ****
+	// http://localhost:8888/all (GET)
+	@RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json")
 	public List<Persona> getAll() {
 		return personaService.getAll();
 	}
-
-	// http://localhost:8888/find/{id} (GET)
-	@RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
-	public Persona showSave(@PathVariable("id") Long id) {
-		return personaService.get(id);
-	}
-
+	
+	// *** CREAR Y ACTUALIZAR (CREATE AND UPDATE) ***
 	// http://localhost:8888/save (POST)
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ResponseEntity<Persona> save(Persona persona) {
+	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<Persona> save(@RequestBody Persona persona) {
 		Persona obj = personaService.save(persona);
 		return new ResponseEntity<Persona>(obj, HttpStatus.OK);
 	}
 
+	// *** ELIMINAR (DELETE) *** 
 	// http://localhost:8888/delete/{id} (GET)
-	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<Persona> delete(@PathVariable Long id) {
 		Persona persona = personaService.get(id);
 		if (persona != null) {
@@ -50,4 +48,10 @@ public class PersonaRestController {
 			return new ResponseEntity<Persona>(persona, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	// http://localhost:8888/find/{id} (GET)
+		@RequestMapping(value = "/find/{id}", method = RequestMethod.GET, produces = "application/json")
+		public Persona showSave(@PathVariable("id") Long id) {
+			return personaService.get(id);
+		}
 }
