@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jes.crud.model.Persona;
-import com.jes.crud.service.PersonaService;
+import com.jes.crud.service.PersonaServiceImpl;
 
 @RestController
 @RequestMapping(value = "/api") // Ruta inicial por defecto\
@@ -21,7 +21,7 @@ import com.jes.crud.service.PersonaService;
 public class PersonaRestController {
 
 	@Autowired
-	PersonaService personaService;
+	PersonaServiceImpl personaService;
 	
 	// *** LISTAR (READ) ****
 	// http://localhost:8888/api/all (GET)
@@ -32,7 +32,7 @@ public class PersonaRestController {
 	
 	// *** CREAR Y ACTUALIZAR (CREATE AND UPDATE) ***
 	// http://localhost:8888/api/save (POST)
-	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/save", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<Persona> save(@RequestBody Persona persona) {
 		Persona obj = personaService.save(persona);
 		return new ResponseEntity<Persona>(obj, HttpStatus.OK);
